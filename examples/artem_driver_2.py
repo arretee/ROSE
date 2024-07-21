@@ -1,9 +1,13 @@
 """
-This driver choice the greatest way possible, But can't get into an obstacle.
+This driver choice the greatest way possible.
+
+Fixes: Bot know when race is over.
+       Bot can lose points to get more points.
+
 """
 from rose.common import obstacles, actions  # NOQA
 
-driver_name = "artem_1"
+driver_name = "artem_2"
 
 type1 = (obstacles.TRASH, obstacles.BIKE, obstacles.BARRIER)
 type2 = (obstacles.CRACK, obstacles.WATER)
@@ -17,20 +21,27 @@ BRAKE = (0, -1, 0)
 JUMP = (0, -1, 1)
 PICKUP = (0, -1, 2)
 
+moves_until_finish = 60
 
-def getBestWay(world, player_x, player_y, score, min_x, max_x):
-    # Check end of recursion
-    if player_y == 0:
+
+def getBestWay(world, player_x, player_y, score, min_x, max_x, until_finish, ignore_next=False):
+
+    # Check end of recursion(or end of world, or end of race)
+    if player_y == 0 or until_finish == 0:
         return [0, score]
+
 
     # Variables
     ret_action = actions.NONE
     max_score = score
     temp_score = score
     pos = []
+    crash = False
 
     # Obstacle in front of driver
     obs_next = world.get((player_x, player_y - 1))
+    if ignore_next is True:
+        obs_next = obstacles.NONE
 
     # If there are no obstacle
     if obs_next == obstacles.NONE:
@@ -49,10 +60,23 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x):
                 pos = [player_x, player_y]
 
                 if world.get(pos) == obstacles.NONE or world.get(pos) == obstacles.PENGUIN:
-                    temp_score = getBestWay(world, player_x, player_y, temp_score, min_x, max_x)[1]
+                    temp_score = \
+                    getBestWay(world, player_x, player_y, temp_score, min_x, max_x, until_finish - 1, False)[1]
                     if temp_score >= max_score:
                         max_score = temp_score
                         ret_action = act
+                        crash = False
+
+                    temp_score = score
+                elif ignore_next is False:
+                    temp_score -= 10
+                    temp_score = \
+                    getBestWay(world, player_x, player_y + 1, temp_score, min_x, max_x, until_finish-1, True)[1]
+
+                    if temp_score >= max_score:
+                        max_score = temp_score
+                        ret_action = act
+                        crash = True
 
                     temp_score = score
 
@@ -72,10 +96,22 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x):
                     if world.get(pos) == obstacles.PENGUIN and act == PICKUP:
                         temp_score += 10
 
-                    temp_score = getBestWay(world, player_x, player_y, temp_score, min_x, max_x)[1]
+                    temp_score = getBestWay(world, player_x, player_y, temp_score, min_x, max_x, until_finish - 1, False)[1]
                     if temp_score > max_score:
                         max_score = temp_score
                         ret_action = act
+                        crash = False
+
+                    temp_score = score
+
+                elif ignore_next is False:
+                    temp_score -= 10
+                    temp_score = getBestWay(world, player_x, player_y + 1, temp_score, min_x, max_x, until_finish-1, True)[1]
+
+                    if temp_score >= max_score:
+                        max_score = temp_score
+                        ret_action = act
+                        crash = True
 
                     temp_score = score
 
@@ -102,10 +138,22 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x):
                     elif act == BRAKE:
                         temp_score += 4
 
-                    temp_score = getBestWay(world, player_x, player_y, temp_score, min_x, max_x)[1]
+                    temp_score = getBestWay(world, player_x, player_y, temp_score, min_x, max_x, until_finish - 1, False)[1]
                     if temp_score >= max_score:
                         max_score = temp_score
                         ret_action = act
+                        crash = False
+
+                    temp_score = score
+
+                elif ignore_next is False:
+                    temp_score -= 10
+                    temp_score = getBestWay(world, player_x, player_y + 1, temp_score, min_x, max_x, until_finish-1, True)[1]
+
+                    if temp_score >= max_score:
+                        max_score = temp_score
+                        ret_action = act
+                        crash = True
 
                     temp_score = score
 
@@ -114,7 +162,7 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x):
 
     # If there is a Bike, Barrier or a Trash
     else:
-        for act in [LEFT, RIGHT]:
+        for act in [NONE, LEFT, RIGHT]:
             if min_x <= player_x + act[0] <= max_x:
                 player_x += act[0]
                 player_y += act[1]
@@ -122,10 +170,22 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x):
                 pos = [player_x, player_y]
 
                 if world.get(pos) == obstacles.NONE:
-                    temp_score = getBestWay(world, player_x, player_y, temp_score, min_x, max_x)[1]
+                    temp_score = getBestWay(world, player_x, player_y, temp_score, min_x, max_x, until_finish - 1, False)[1]
                     if temp_score >= max_score:
                         max_score = temp_score
                         ret_action = act
+                        crash = False
+
+                    temp_score = score
+
+                elif ignore_next is False:
+                    temp_score -= 10
+                    temp_score = getBestWay(world, player_x, player_y + 1, temp_score, min_x, max_x, until_finish-1, True)[1]
+
+                    if temp_score >= max_score:
+                        max_score = temp_score
+                        ret_action = act
+                        crash = True
 
                     temp_score = score
 
@@ -133,10 +193,13 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x):
                 player_x -= act[0]
 
     # Return
-    return [ret_action, max_score]
+    if crash:
+        print(crash)
+    return [ret_action, max_score, crash]
 
 
 def drive(world):
+    global moves_until_finish, crash_times
     score = 0
 
     if 3 <= world.car.x <= 5:
@@ -146,8 +209,17 @@ def drive(world):
         player_x_min = 0
         player_x_max = 2
 
-    act = getBestWay(world, world.car.x, world.car.y, score, player_x_min, player_x_max)[0]
+    act = getBestWay(world, world.car.x, world.car.y, score, player_x_min, player_x_max, moves_until_finish)
 
+    moves_until_finish -= 1
+
+    print(f"Moves Left = {moves_until_finish}")
+    print("\n\n")
+
+    if moves_until_finish == 0:
+        moves_until_finish = 60
+
+    act = act[0]
     if act == LEFT:
         return actions.LEFT
     if act == RIGHT:
