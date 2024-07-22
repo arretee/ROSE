@@ -26,6 +26,47 @@ moves_until_finish = 60
 
 
 def getBestWay(world, player_x, player_y, score, min_x, max_x, until_finish, cells_to_ignore):
+    """
+    world - object with data about map.
+    player_x - player x position.
+    player_y - player y position.
+    min_x - min x value player can be (left side x of the road)
+    max_x - max x value player can be (right side x of the road)
+    until_finish - number moves left until game ends.
+    cells_to_ignore - list of cells to ignore collision with them.
+    """
+
+    """
+    Function template:
+
+
+    if player on finish or on the end of map: end recursion
+
+    initialize variables
+
+    check if need to ignore item in front of driver
+
+    if the obs next to driver is none:
+        check all actions that driver can do (even if it leads to loss of points)
+        and choose the best option(option with best final score)
+
+    elif the obs next to driver is pinguin:
+        check all actions that driver can do (even if it leads to loss of points)
+        and choose the best option(option with best final score)
+
+    elif the ons next to driver from type2 (Water and Crack)
+        check all actions that driver can do (even if it leads to loss of points)
+        and choose the best option(option with best final score)
+
+    else (If obs next to driver from type3 (Bike, Barrier, Trash)
+        check all actions that driver can do (even if it leads to loss of points)
+        and choose the best option(option with best final score)
+
+
+    return [action, best_score, if there was a crash]
+    """
+
+
     # Check end of recursion(or end of world, or end of race)
     if player_y == 0 or until_finish == 0:
         return [0, score]
