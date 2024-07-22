@@ -193,8 +193,6 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x, until_finish, ign
                 player_x -= act[0]
 
     # Return
-    if crash:
-        print(crash)
     return [ret_action, max_score, crash]
 
 
@@ -212,9 +210,6 @@ def drive(world):
     act = getBestWay(world, world.car.x, world.car.y, score, player_x_min, player_x_max, moves_until_finish)
 
     moves_until_finish -= 1
-
-    print(f"Moves Left = {moves_until_finish}")
-    print("\n\n")
 
     if moves_until_finish == 0:
         moves_until_finish = 60
