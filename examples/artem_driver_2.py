@@ -169,7 +169,7 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x, until_finish, ign
 
                 pos = [player_x, player_y]
 
-                if world.get(pos) == obstacles.NONE:
+                if world.get(pos) == obstacles.NONE or world.get(pos):
                     temp_score = getBestWay(world, player_x, player_y, temp_score, min_x, max_x, until_finish - 1, False)[1]
                     if temp_score >= max_score:
                         max_score = temp_score

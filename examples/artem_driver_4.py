@@ -6,7 +6,7 @@ Fixes: Bot know when race is over.
 
 """
 from rose.common import obstacles, actions  # NOQA
-from copy import deepcopy
+import time
 
 driver_name = "artem_4"
 
@@ -79,7 +79,6 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x, until_finish, cel
     max_score = score
     temp_score = score
     pos = []
-    crash = False
 
     # Obstacle in front of driver
     obs_next = world.get((player_x, player_y - 1))
@@ -260,9 +259,10 @@ def drive(world):
         player_x_min = 0
         player_x_max = 2
 
+    time_start = time.time()
     ret = getBestWay(world, world.car.x, world.car.y, score, player_x_min, player_x_max, moves_until_finish, [])
-    print(f"Best Score from here - {ret[1]}")
 
+    print(time.time() - time_start)
     moves_until_finish -= 1
 
     if moves_until_finish == 0:
