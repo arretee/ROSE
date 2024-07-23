@@ -262,7 +262,6 @@ def drive(world):
     time_start = time.time()
     ret = getBestWay(world, world.car.x, world.car.y, score, player_x_min, player_x_max, moves_until_finish, [])
 
-    print(time.time() - time_start)
     moves_until_finish -= 1
 
     if moves_until_finish == 0:
