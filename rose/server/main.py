@@ -28,8 +28,15 @@ def main():
     )
     parser.add_argument(
         "--track_file_read",
-        "-f",
+        "-r",
         dest="track_file_read",
+        default="",
+        help="path of track data file.",
+    )
+    parser.add_argument(
+        "--track_file_write",
+        "-w",
+        dest="track_file_write",
         default="",
         help="path of track data file.",
     )
@@ -51,6 +58,10 @@ def main():
 
         if file_exist:
             config.track_file_name_read = True
+
+    if args.track_file_write != "":
+        config.track_write_mode = True
+        config.track_file_name_write = args.track_file_write
 
     log.info("starting server")
     g = game.Game()

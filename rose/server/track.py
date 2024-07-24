@@ -10,8 +10,9 @@ class Track(object):
         self.line_read = None
 
         self.reset()
-        if os.path.exists("map_file.txt"):
-            os.remove("map_file.txt")
+        if config.track_write_mode:
+            if os.path.exists(config.track_file_name_write):
+                os.remove(config.track_file_name_write)
 
     # Game state interface
 
@@ -19,9 +20,10 @@ class Track(object):
         """Go to the next game state"""
         self._matrix.pop()
         new_row = self._generate_row()
-        with open("map_file.txt", "a") as outfile:
-            outfile.write(str(new_row))
-            outfile.write("\n")
+        if config.track_write_mode:
+            with open(config.track_file_name_write, "a") as outfile:
+                outfile.write(str(new_row))
+                outfile.write("\n")
 
         self._matrix.insert(0, new_row)
 
