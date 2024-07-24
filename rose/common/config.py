@@ -14,12 +14,10 @@ is_track_random = True
 
 track_file_name_read = ""
 track_read_mode = False
-track_read_line = 0
-max_line = 51
+max_line = 60
 
 track_file_name_write = ""
 track_write_mode = False
-
 
 # Matrix
 

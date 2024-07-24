@@ -10,6 +10,9 @@ class Track(object):
         self.line_read = None
 
         self.reset()
+
+        # If file already exist, this code will remove it
+        # to start new file for the new map.
         if config.track_write_mode:
             if os.path.exists(config.track_file_name_write):
                 os.remove(config.track_file_name_write)
@@ -19,11 +22,12 @@ class Track(object):
     def update(self):
         """Go to the next game state"""
         self._matrix.pop()
-        new_row = self._generate_row()
+        if config.track_read_mode:
+            new_row = self._get_row_from_file()
+        else:
+            new_row = self._generate_row()
         if config.track_write_mode:
-            with open(config.track_file_name_write, "a") as outfile:
-                outfile.write(str(new_row))
-                outfile.write("\n")
+            self.save_line_to_file(new_row)
 
         self._matrix.insert(0, new_row)
 
@@ -69,27 +73,50 @@ class Track(object):
         obstacles, but in different cells if 'is_track_random' is True.
         Otherwise, the tracks will be identical.
         """
-        if config.track_read_mode:
-            content = open(config.track_file_name_read).readlines()
-            print(f"\n\n\n\n\n\n\n{len(content)}\n\n\n\n\n\n\n\n")
-            row = ast.literal_eval(content[self.line_read])
-            self.line_read += 1
 
-            if self.line_read > config.max_line:
-                self.line_read = 0
-
-            return row
+        row = [obstacles.NONE] * config.matrix_width
+        obstacle = obstacles.get_random_obstacle()
+        if config.is_track_random:
+            for lane in range(config.max_players):
+                low = lane * config.cells_per_player
+                high = low + config.cells_per_player
+                cell = random.choice(range(low, high))
+                row[cell] = obstacle
         else:
-            row = [obstacles.NONE] * config.matrix_width
-            obstacle = obstacles.get_random_obstacle()
-            if config.is_track_random:
-                for lane in range(config.max_players):
-                    low = lane * config.cells_per_player
-                    high = low + config.cells_per_player
-                    cell = random.choice(range(low, high))
-                    row[cell] = obstacle
-            else:
-                cell = random.choice(range(0, config.cells_per_player))
-                for lane in range(config.max_players):
-                    row[cell + lane * config.cells_per_player] = obstacle
-            return row
+            cell = random.choice(range(0, config.cells_per_player))
+            for lane in range(config.max_players):
+                row[cell + lane * config.cells_per_player] = obstacle
+        return row
+
+    def _get_row_from_file(self):
+        """
+        Gets row from file of map.
+        Function will get row by number of line to read(self.line_read) and increase value of
+        this variable by one.
+        If function get last line from file, value of self.line_read will set to 0.
+
+        example:
+        row in file - ['', '', 'trash', 'trash', '', '']
+        row returned - ['', '', 'trash', 'trash', '', '']
+        """
+        content = open(config.track_file_name_read).readlines()
+        row = ast.literal_eval(content[self.line_read])
+        self.line_read += 1
+
+        if self.line_read > config.max_line:
+            self.line_read = 0
+
+        return row
+
+
+    def save_line_to_file(self, row):
+        """
+        Function will append current row to file.
+        file path is config.track_file_name_write
+
+        example of row - ['', '', 'trash', 'trash', '', '']
+        """
+
+        with open(config.track_file_name_write, "a") as outfile:
+            outfile.write(str(row))
+            outfile.write("\n")
