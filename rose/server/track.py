@@ -1,7 +1,7 @@
 import random
 import ast
 from rose.common import config, obstacles
-
+import os
 
 class Track(object):
     def __init__(self):
@@ -10,13 +10,20 @@ class Track(object):
         self.line_read = None
 
         self.reset()
+        if os.path.exists("map_file.txt"):
+            os.remove("map_file.txt")
 
     # Game state interface
 
     def update(self):
         """Go to the next game state"""
         self._matrix.pop()
-        self._matrix.insert(0, self._generate_row())
+        new_row = self._generate_row()
+        with open("map_file.txt", "a") as outfile:
+            outfile.write(str(new_row))
+            outfile.write("\n")
+
+        self._matrix.insert(0, new_row)
 
     def state(self):
         """Return read only serialize-able state for sending to client"""
