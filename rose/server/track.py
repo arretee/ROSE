@@ -11,11 +11,6 @@ class Track(object):
 
         self.reset()
 
-        # If file already exist, this code will remove it
-        # to start new file for the new map.
-        if config.track_write_mode:
-            if os.path.exists(config.track_file_name_write):
-                os.remove(config.track_file_name_write)
 
     # Game state interface
 
@@ -59,9 +54,19 @@ class Track(object):
             [obstacles.NONE] * config.matrix_width for x in range(config.matrix_height)
         ]
 
+        # If server in reader mode, this code will reset variables of read file
         if config.track_read_mode:
-            self.file_read = open(config.track_file_name_read)
+            # if file is already opened, do not open it again
+            if self.file_read is None:
+                self.file_read = open(config.track_file_name_read).readlines()
             self.line_read = 0
+
+
+        # If file already exist, this code will remove it
+        # to start new file for the new map.
+        if config.track_write_mode:
+            if os.path.exists(config.track_file_name_write):
+                os.remove(config.track_file_name_write)
 
     # Private
 
@@ -99,8 +104,7 @@ class Track(object):
         row in file - ['', '', 'trash', 'trash', '', '']
         row returned - ['', '', 'trash', 'trash', '', '']
         """
-        content = open(config.track_file_name_read).readlines()
-        row = ast.literal_eval(content[self.line_read])
+        row = ast.literal_eval(self.file_read[self.line_read])
         self.line_read += 1
 
         if self.line_read > config.max_line:

@@ -14,7 +14,7 @@ is_track_random = True
 
 track_file_name_read = ""
 track_read_mode = False
-max_line = 60
+max_line = 61
 
 track_file_name_write = ""
 track_write_mode = False
