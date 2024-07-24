@@ -54,7 +54,7 @@ class Track(object):
         ]
 
         if config.track_read_mode:
-            self.file_read = open(config.track_file_name_read, "r")
+            self.file_read = open(config.track_file_name_read)
             self.line_read = 0
 
     # Private
@@ -68,11 +68,15 @@ class Track(object):
         Otherwise, the tracks will be identical.
         """
         if config.track_read_mode:
-            row = ast.literal_eval(config)
+            content = open(config.track_file_name_read).readlines()
+            print(f"\n\n\n\n\n\n\n{len(content)}\n\n\n\n\n\n\n\n")
+            row = ast.literal_eval(content[self.line_read])
             self.line_read += 1
 
             if self.line_read > config.max_line:
                 self.line_read = 0
+
+            return row
         else:
             row = [obstacles.NONE] * config.matrix_width
             obstacle = obstacles.get_random_obstacle()
