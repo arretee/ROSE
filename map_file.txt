@@ -1,0 +1,6 @@
+['', '', 'crack', '', 'crack', '']
+['', '', 'crack', 'crack', '', '']
+['water', '', '', 'water', '', '']
+['', 'barrier', '', '', '', 'barrier']
+['', 'penguin', '', 'penguin', '', '']
+['', 'crack', '', '', '', 'crack']
