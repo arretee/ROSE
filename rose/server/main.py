@@ -57,7 +57,7 @@ def main():
         file_exist = os.path.isfile(args.track_file_read)
 
         if file_exist:
-            config.track_file_name_read = True
+            config.track_read_mode = True
 
     if args.track_file_write != "":
         config.track_write_mode = True

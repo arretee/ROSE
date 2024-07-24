@@ -1,6 +1,14 @@
+<<<<<<< HEAD
 ['', '', 'crack', '', 'crack', '']
 ['', '', 'crack', 'crack', '', '']
 ['water', '', '', 'water', '', '']
 ['', 'barrier', '', '', '', 'barrier']
 ['', 'penguin', '', 'penguin', '', '']
 ['', 'crack', '', '', '', 'crack']
+=======
+['', '', '', '', 'barrier', '']
+['', '', 'trash', 'trash', '', '']
+['', '', 'water', 'water', '', '']
+['', '', '', '', '', '']
+['', '', '', '', '', '']
+>>>>>>> origin/master
