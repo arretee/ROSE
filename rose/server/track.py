@@ -3,6 +3,7 @@ import ast
 from rose.common import config, obstacles
 import os
 
+
 class Track(object):
     def __init__(self):
         self._matrix = None
