@@ -6,9 +6,8 @@ Fixes: Bot know when race is over.
 
 """
 from rose.common import obstacles, actions  # NOQA
-import time
 
-driver_name = "artem_4"
+driver_name = "Moshiko"
 
 type1 = (obstacles.TRASH, obstacles.BIKE, obstacles.BARRIER)
 type2 = (obstacles.CRACK, obstacles.WATER)
@@ -86,12 +85,20 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x, until_finish):
 
     # If there are no obstacle
     if obs_next == obstacles.NONE:
-        if player_x == 0 + min_x:
-            acts = [NONE, RIGHT]
-        elif player_x == 1 + min_x:
-            acts = [LEFT, RIGHT, NONE]
+        if min_x == 3:
+            if player_x == 0 + min_x:
+                acts = [RIGHT, NONE]
+            elif player_x == 1 + min_x:
+                acts = [RIGHT, NONE, LEFT]
+            else:
+                acts = [NONE, LEFT]
         else:
-            acts = [NONE, LEFT]
+            if player_x == 0 + min_x:
+                acts = [NONE, RIGHT]
+            elif player_x == 1 + min_x:
+                acts = [LEFT, NONE, RIGHT]
+            else:
+                acts = [LEFT, NONE]
 
         for act in acts:
             if min_x <= player_x + act[0] <= max_x:
@@ -200,7 +207,12 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x, until_finish):
 
     # If there is a Bike, Barrier or a Trash
     else:
-        for act in [NONE, LEFT, RIGHT]:
+        if min_x == 3:
+            acts = [NONE, RIGHT, LEFT]
+        else:
+            acts = [NONE, LEFT, RIGHT]
+
+        for act in acts:
             if min_x <= player_x + act[0] <= max_x:
                 player_x += act[0]
                 player_y += act[1]

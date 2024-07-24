@@ -27,7 +27,7 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x, moves_left):
 
     # Variables
     ret_action = actions.NONE
-    max_score = score
+    max_score = -100000
     temp_score = score
     pos = []
 
