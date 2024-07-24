@@ -12,6 +12,11 @@ game_duration = 60
 number_of_cars = 4
 is_track_random = True
 
+track_file_name_read = ""
+track_read_mode = False
+track_read_line = 0
+max_line = 51
+
 # Matrix
 
 matrix_height = 9

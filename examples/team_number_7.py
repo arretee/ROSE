@@ -43,7 +43,6 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x, until_finish):
 
     initialize variables
 
-    check if need to ignore item in front of driver
 
     if the obs next to driver is none:
         check all actions that driver can do (even if it leads to loss of points)
@@ -62,7 +61,7 @@ def getBestWay(world, player_x, player_y, score, min_x, max_x, until_finish):
         and choose the best option(option with best final score)
 
 
-    return [action, best_score, if there was a crash]
+    return [action, best_score]
     """
 
 

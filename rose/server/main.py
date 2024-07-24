@@ -1,3 +1,4 @@
+import os.path
 import socket
 import logging
 import argparse
@@ -23,7 +24,14 @@ def main():
         default="random",
         choices=["random", "same"],
         help="Definition of driver tracks: random or same."
-        "If not specified, random will be used.",
+             "If not specified, random will be used.",
+    )
+    parser.add_argument(
+        "--track_file_read",
+        "-f",
+        dest="track_file_read",
+        default="",
+        help="path of track data file.",
     )
 
     args = parser.parse_args()
@@ -36,6 +44,13 @@ def main():
         config.is_track_random = False
     else:
         config.is_track_random = True
+
+    if args.track_file_read != "":
+        config.track_file_name_read = args.track_file_read
+        file_exist = os.path.isfile(args.track_file_read)
+
+        if file_exist:
+            config.track_file_name_read = True
 
     log.info("starting server")
     g = game.Game()
