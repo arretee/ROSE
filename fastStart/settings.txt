@@ -1,0 +1,6 @@
+activate = "C:\AeroData\NitzanimFiles\RedHatProject\.venv\rose\Scripts\activate"
+server_path_py = "C:\AeroData\NitzanimFiles\RedHatProject\ROSE\rose-server.py"
+server_params  = ""
+client_path_py = "C:\AeroData\NitzanimFiles\RedHatProject\ROSE\rose-client.py"
+client1_params = "C:\AeroData\NitzanimFiles\RedHatProject\ROSE\examples\team_number_7.py"
+client2_params = "C:\AeroData\NitzanimFiles\RedHatProject\ROSE\examples\artem_driver_4.py"
